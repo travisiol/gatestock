@@ -1070,3 +1070,518 @@ body {
     font-size: 0.85rem;
   }
 }
+
+/* -------------------------------------------------------------- console -- */
+
+/*
+ * The console keeps the landing's rules rather than inventing a second look:
+ * white for the thing you press, lime only for values the chain would see.
+ * A lime primary button would be the fourth use of the accent and would flatten
+ * the distinction the whole palette rests on.
+ */
+
+.gs-page {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 120px 32px 140px;
+  text-align: left;
+}
+
+.gs-page-head {
+  max-width: 62ch;
+}
+
+.gs-page h1 {
+  margin: 26px 0 0;
+  color: #fff;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+}
+
+.gs-page-lead {
+  margin: 22px 0 0;
+  color: rgba(242, 241, 241, 0.62);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+/* Said once, at the top, in the ledger's own voice — the page must never let
+   anyone believe a chain is involved. */
+.gs-notice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 40px;
+  padding: 14px 18px;
+  border: 1px solid rgba(204, 232, 4, 0.28);
+  border-radius: 12px;
+  background: rgba(204, 232, 4, 0.06);
+  color: rgba(242, 241, 241, 0.72);
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+}
+
+.gs-notice b {
+  color: var(--lime);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.gs-grid {
+  display: grid;
+  gap: 24px;
+  margin-top: 44px;
+}
+
+@media (min-width: 900px) {
+  .gs-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+  }
+}
+
+.gs-panel {
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.gs-panel-h {
+  margin: 0 0 4px;
+  color: #6f6e6e;
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.gs-panel h2 {
+  margin: 0 0 22px;
+  color: #fff;
+  font-size: 1.45rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+
+.gs-label {
+  display: block;
+  margin-bottom: 10px;
+  color: rgba(242, 241, 241, 0.62);
+  font-size: 13px;
+}
+
+.gs-input {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 13px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.gs-input::placeholder {
+  color: #5c5b58;
+}
+
+.gs-input:focus {
+  border-color: rgba(204, 232, 4, 0.55);
+  box-shadow: 0 0 0 3px rgba(204, 232, 4, 0.12);
+  outline: none;
+}
+
+.gs-action {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--surface);
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+
+.gs-action:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.gs-action:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.gs-action-ghost {
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(242, 241, 241, 0.75);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.gs-action-ghost:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+.gs-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.gs-leaf {
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.gs-leaf + .gs-leaf {
+  margin-top: 12px;
+}
+
+.gs-leaf-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.gs-leaf-n {
+  color: #6f6e6e;
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+}
+
+/* The only string on the page an observer would actually get. */
+.gs-hash {
+  margin-top: 10px;
+  color: var(--lime);
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  word-break: break-all;
+}
+
+.gs-secret {
+  margin-top: 8px;
+  color: #5c5b58;
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 11.5px;
+  line-height: 1.7;
+  word-break: break-all;
+}
+
+.gs-empty {
+  padding: 30px 0;
+  color: #5c5b58;
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+
+.gs-proof {
+  margin-top: 24px;
+  padding: 22px;
+  border: 1px solid rgba(204, 232, 4, 0.3);
+  border-radius: 14px;
+  background: rgba(204, 232, 4, 0.05);
+}
+
+.gs-proof-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 7px 0;
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+.gs-proof-line span:first-child {
+  min-width: 15ch;
+  color: #6f6e6e;
+}
+
+.gs-proof-line b {
+  color: var(--lime);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .gs-page {
+    padding: 88px 20px 100px;
+  }
+
+  .gs-panel {
+    padding: 22px 18px;
+  }
+}
+
+/* ------------------------------------------------------------ not found -- */
+
+.gs-nf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1080px;
+  min-height: 62vh;
+  margin: 0 auto;
+  padding: 120px 32px;
+  text-align: center;
+}
+
+.gs-nf-code {
+  color: var(--lime);
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+}
+
+.gs-nf h1 {
+  max-width: 16ch;
+  margin: 26px 0 0;
+  color: #fff;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.gs-nf p {
+  max-width: 46ch;
+  margin: 20px 0 34px;
+  color: rgba(242, 241, 241, 0.62);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* ----------------------------------------------------------- documents -- */
+
+/*
+ * The whitepaper and the legal pages are the only long reads on the site, so
+ * they get the one thing the landing deliberately refuses: a measure. Body
+ * text is capped near 68 characters and set left — centred prose at this
+ * length is unreadable, and the landing's centring is a poster device that
+ * does not survive four hundred words.
+ */
+
+.gs-doc {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 120px 32px 140px;
+  text-align: left;
+}
+
+.gs-doc-head {
+  max-width: 62ch;
+  padding-bottom: 44px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.gs-doc-head h1 {
+  margin: 26px 0 0;
+  color: #fff;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+}
+
+.gs-doc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  margin-top: 24px;
+  color: #6f6e6e;
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.gs-doc-grid {
+  display: grid;
+  gap: 48px;
+  margin-top: 56px;
+}
+
+@media (min-width: 960px) {
+  .gs-doc-grid {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 64px;
+  }
+}
+
+.gs-toc {
+  align-self: start;
+}
+
+@media (min-width: 960px) {
+  .gs-toc {
+    position: sticky;
+    top: 110px;
+  }
+}
+
+.gs-toc-h {
+  margin: 0 0 16px;
+  color: #6f6e6e;
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.gs-toc a {
+  display: block;
+  padding: 6px 0;
+  color: rgba(242, 241, 241, 0.55);
+  font-size: 13.5px;
+  line-height: 1.45;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.gs-toc a:hover {
+  color: var(--lime);
+}
+
+.gs-doc-body {
+  max-width: 68ch;
+}
+
+.gs-doc-body section {
+  scroll-margin-top: 110px;
+}
+
+.gs-doc-body section + section {
+  margin-top: 64px;
+}
+
+.gs-sec-n {
+  color: var(--lime);
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+}
+
+.gs-doc-body h2 {
+  margin: 14px 0 0;
+  color: #fff;
+  font-size: clamp(1.5rem, 2.6vw, 1.95rem);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.gs-doc-body h3 {
+  margin: 34px 0 0;
+  color: #fff;
+  font-size: 1.08rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.gs-doc-body p {
+  margin: 18px 0 0;
+  color: rgba(242, 241, 241, 0.68);
+  font-size: 1.02rem;
+  line-height: 1.78;
+}
+
+.gs-doc-body ul {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gs-doc-body li {
+  position: relative;
+  margin-top: 12px;
+  padding-left: 22px;
+  color: rgba(242, 241, 241, 0.68);
+  font-size: 1.02rem;
+  line-height: 1.78;
+}
+
+.gs-doc-body li::before {
+  content: "";
+  position: absolute;
+  top: 0.78em;
+  left: 2px;
+  width: 6px;
+  height: 1px;
+  background: var(--lime);
+}
+
+.gs-doc-body strong {
+  color: #fff;
+  font-weight: 500;
+}
+
+.gs-doc-body code {
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--lime);
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 0.88em;
+}
+
+/* An unfilled value that only the operator can supply. It is deliberately
+   loud: nothing on these pages should reach production still saying this. */
+.gs-blank {
+  display: inline-block;
+  padding: 1px 8px;
+  border: 1px dashed rgba(204, 232, 4, 0.6);
+  border-radius: 6px;
+  background: rgba(204, 232, 4, 0.07);
+  color: var(--lime);
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 0.82em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .gs-doc {
+    padding: 88px 20px 100px;
+  }
+}

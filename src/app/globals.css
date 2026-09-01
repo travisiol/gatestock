@@ -1,0 +1,1072 @@
+@import "tailwindcss";
+
+/*
+ * GATESTOCK — zero-knowledge ownership for onchain assets.
+ *
+ * The page is black, not dark grey: everything the protocol hides is the
+ * absence of light, and the one thing it reveals — the proof — is the only
+ * saturated colour on the page. Lime is therefore rationed. It appears on the
+ * eyebrow pills, on the mono micro-labels that say what the chain actually
+ * sees, and on the single closing panel where the whole surface flips to lime
+ * and the type goes dark. Nowhere else. A second accent would make it decor.
+ *
+ * Type does the same job in two registers. Inter at 300 for anything large —
+ * the headlines are thin at four rem because a heavy face reads as a pitch,
+ * and this is a claim about what is not visible. JetBrains Mono, tracked out
+ * at twelve pixels, for the readouts: "the chain sees — a hash". Mono is the
+ * ledger's own voice, so it is reserved for statements of fact about the
+ * chain and never used for persuasion.
+ */
+
+:root {
+  --bg: #000;
+  --hero-bg: #0c0a0b;
+  --footer-bg: #0f0d0e;
+  --surface: #161314;
+
+  --tx: #f2f1f1;
+  --text: #cfcece;
+  --mut: #8f8d8d;
+  --muted: #8a8783;
+
+  --lime: #cce804;
+  --lime-deep: #b6d004;
+  --dark: #191617;
+
+  --border: rgba(255, 255, 255, 0.12);
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  /* The full-bleed blocks are sized in vw, which counts the scrollbar; without
+     this a desktop page picks up a few pixels of horizontal scroll. */
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+}
+
+/* ---------------------------------------------------------------- shell -- */
+
+.gs-root {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  min-height: 100vh;
+  padding: 14px 28px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.gs-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.gs-amb-grid {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px) 0 0 /
+      64px 64px,
+    linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px) 0 0 / 64px
+      64px;
+  mask-image: radial-gradient(
+    80% 60% at 50% 30%,
+    #000 30%,
+    transparent 80%
+  );
+}
+
+.gs-amb-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+}
+
+.gs-amb-glow-1 {
+  top: -200px;
+  left: -200px;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(
+    circle,
+    rgba(182, 208, 4, 0.4),
+    transparent 70%
+  );
+}
+
+/* The one warm note in the palette, and it sits behind everything at a third
+   of an opacity — it exists so the lower half of the page is not neutral. */
+.gs-amb-glow-2 {
+  right: -150px;
+  bottom: -150px;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(180, 0, 20, 0.35), transparent 70%);
+}
+
+/* ------------------------------------------------------------------ nav -- */
+
+.gs-nav {
+  position: sticky;
+  top: 14px;
+  z-index: 60;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: 100%;
+  max-width: 1600px;
+  padding: 10px 14px 10px 20px;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.04) 45%,
+    rgba(204, 232, 4, 0.05)
+  );
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 -1px rgba(0, 0, 0, 0.35),
+    0 10px 40px rgba(0, 0, 0, 0.45),
+    0 2px 10px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(14px) saturate(1.2);
+  transition: max-width 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gs-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(rgba(255, 255, 255, 0.14), transparent 45%);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.gs-nav::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 10%;
+  left: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.gs-nav-left {
+  justify-self: start;
+}
+
+.gs-nav-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  gap: 32px;
+  width: max-content;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.gs-nav-right {
+  display: flex;
+  grid-column: 3;
+  justify-self: end;
+  gap: 10px;
+  margin-right: 10px;
+}
+
+.gs-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.gs-logo-mark {
+  display: block;
+  width: auto;
+  height: 56px;
+  filter: drop-shadow(0 0 12px rgba(204, 232, 4, 0.35));
+  transition:
+    transform 0.4s,
+    filter 0.4s;
+}
+
+.gs-logo:hover .gs-logo-mark {
+  filter: drop-shadow(0 0 18px rgba(204, 232, 4, 0.6));
+  transform: scale(1.06);
+}
+
+.gs-nav-link {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 400;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.gs-nav-link:hover {
+  color: #fff;
+}
+
+.gs-btn-solid {
+  padding: 7px 18px;
+  border: none;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--surface);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.gs-btn-solid:hover {
+  opacity: 0.9;
+}
+
+.gs-nav-right .gs-btn-solid {
+  max-width: 220px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition:
+    opacity 0.22s,
+    max-width 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gs-socials {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gs-nav-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(204, 232, 4, 0.35);
+  border-radius: 10px;
+  background: rgba(219, 236, 97, 0.13);
+  color: #fff;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background 0.2s,
+    transform 0.2s;
+}
+
+.gs-nav-social:hover {
+  background: rgba(213, 233, 74, 0.27);
+  border-color: var(--lime-deep);
+  transform: translateY(-1px);
+}
+
+/* The pill contracts on scroll and drops its call to action — once the hero
+   button has been passed, a second one in the bar is just noise. */
+@media (min-width: 901px) {
+  .gs-nav.is-shrunk {
+    max-width: 900px;
+    padding: 7px 10px 7px 16px;
+    box-shadow:
+      inset 0 1px rgba(255, 255, 255, 0.18),
+      inset 0 -1px rgba(0, 0, 0, 0.35),
+      0 6px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .gs-nav.is-shrunk .gs-logo-mark {
+    height: 40px;
+  }
+
+  .gs-nav.is-shrunk .gs-nav-right .gs-btn-solid {
+    max-width: 0;
+    padding-right: 0;
+    padding-left: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.gs-nav-mobile-title {
+  display: none;
+}
+
+.gs-hamburger {
+  position: relative;
+  z-index: 60;
+  display: none;
+  box-sizing: border-box;
+  justify-self: end;
+  width: 44px;
+  height: 44px;
+  padding: 13px 11px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.gs-hamburger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  margin: 5px auto;
+  background: #fff;
+  transition:
+    transform 0.3s,
+    opacity 0.3s;
+}
+
+.gs-hamburger.is-open span:first-child {
+  transform: translateY(3.25px) rotate(45deg);
+}
+
+.gs-hamburger.is-open span:last-child {
+  transform: translateY(-3.25px) rotate(-45deg);
+}
+
+.gs-mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  height: 100dvh;
+  padding: 40px;
+  background: rgba(22, 19, 20, 0.94);
+  backdrop-filter: blur(18px);
+  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gs-mobile-menu.is-open {
+  right: 0;
+}
+
+.gs-mobile-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.gs-mobile-link {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.gs-mobile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 260px;
+  margin-top: 16px;
+}
+
+.gs-mobile-socials {
+  margin-bottom: 0.5rem;
+  justify-content: center;
+}
+
+.gs-mobile-btn {
+  width: 100%;
+  padding: 12px 18px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .gs-nav {
+    grid-template-columns: 1fr auto;
+    padding: 14px 20px;
+  }
+
+  .gs-nav-center,
+  .gs-nav-right {
+    display: none;
+  }
+
+  .gs-hamburger {
+    display: block;
+  }
+
+  .gs-nav-mobile-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .gs-mobile-menu .gs-nav-social {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .gs-nav,
+  .gs-mobile-menu {
+    background: var(--surface);
+    backdrop-filter: none;
+  }
+}
+
+/* ----------------------------------------------------------------- hero -- */
+
+/* The hero, the sections and the footer all break out of the shell's 28px
+   gutter. `calc(50% - 50vw)` is the only reliable way back to the viewport
+   edge from inside a padded, centred column. */
+.gs-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  min-height: 100vh;
+  margin-right: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
+  background: var(--hero-bg);
+  text-align: center;
+}
+
+/* The scene the hero sits on: one shaft of light from the upper right, a lit
+   ridge, and a figure at the crest. Nothing here is an image — a photograph
+   would date the page and would have to be loaded before the headline reads. */
+.gs-hero-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--hero-bg);
+  pointer-events: none;
+}
+
+.gs-hero-beam {
+  position: absolute;
+  top: -40%;
+  right: -6%;
+  width: 44%;
+  height: 155%;
+  background: linear-gradient(
+    to bottom,
+    rgba(232, 252, 86, 0.5),
+    rgba(204, 232, 4, 0.2) 32%,
+    rgba(204, 232, 4, 0.04) 62%,
+    transparent 82%
+  );
+  transform: rotate(31deg);
+  transform-origin: top center;
+  filter: blur(46px);
+  opacity: 0.6;
+}
+
+.gs-hero-beam-core {
+  position: absolute;
+  top: -34%;
+  right: 15%;
+  width: 7%;
+  height: 128%;
+  background: linear-gradient(
+    to bottom,
+    rgba(246, 255, 176, 0.95),
+    rgba(204, 232, 4, 0.3) 42%,
+    transparent 74%
+  );
+  transform: rotate(31deg);
+  transform-origin: top center;
+  filter: blur(16px);
+}
+
+.gs-hero-ridge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 72%;
+}
+
+.gs-hero-haze {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      44% 30% at 42% 74%,
+      rgba(204, 232, 4, 0.16),
+      transparent 72%
+    ),
+    linear-gradient(
+      rgba(12, 10, 11, 0.15),
+      transparent 25%,
+      transparent 65%,
+      rgba(12, 10, 11, 0.75)
+    );
+}
+
+.gs-hero-arc {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.35;
+  background: radial-gradient(
+    circle at 50% -70%,
+    transparent 0%,
+    transparent 78%,
+    rgba(204, 232, 4, 0.35) 88%,
+    rgba(232, 252, 86, 0.5) 92%,
+    transparent 97%
+  );
+  pointer-events: none;
+}
+
+.gs-hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.6;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px) 0 0 /
+      40px 40px,
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px) 0 0 / 40px
+      40px;
+  mask-image: radial-gradient(circle at 50% -70%, transparent 60%, #000 78%);
+  pointer-events: none;
+}
+
+.gs-hero-content-wrap {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding: 40px 48px;
+}
+
+.gs-hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: auto;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.gs-h1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0 0 24px;
+  font-size: clamp(2rem, 6vw, 4.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.gs-h1-thin {
+  color: #fff;
+  font-weight: 300;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+}
+
+.gs-h1-grad {
+  background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0.75));
+  background-clip: text;
+  color: transparent;
+  font-weight: 400;
+  text-shadow: none;
+}
+
+.gs-sub {
+  max-width: 520px;
+  margin: 0 auto 32px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.98rem;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+.gs-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.gs-cta {
+  position: relative;
+  padding: 12px 32px;
+  border: none;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--surface);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow:
+    0 0 rgba(255, 255, 255, 0),
+    0 8px 24px rgba(0, 0, 0, 0.6);
+  transition:
+    opacity 0.2s,
+    transform 0.2s,
+    box-shadow 0.3s;
+}
+
+.gs-cta:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.08),
+    0 12px 32px rgba(204, 232, 4, 0.35);
+}
+
+.gs-cta-ghost {
+  padding: 12px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(40, 40, 34, 0.55);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.gs-cta-ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 720px) {
+  .gs-hero-content-wrap {
+    padding: 64px 24px 56px;
+  }
+}
+
+/* ------------------------------------------------------------- sections -- */
+
+/* The shell centres its children, so a full-bleed block measured against the
+   shell itself lands off-centre by half the gutter. `.gs-flow` restores a
+   plain, full-width block context for `calc(50% - 50vw)` to resolve against. */
+.gs-flow {
+  width: 100%;
+}
+
+.gs-sk {
+  width: 100vw;
+  margin-right: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw);
+  padding-bottom: 120px;
+  background: transparent;
+  color: var(--tx);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+.gs-sk * {
+  box-sizing: border-box;
+}
+
+.gs-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.gs-sec {
+  padding: 168px 0 0;
+}
+
+.gs-eye {
+  display: inline-block;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: var(--lime);
+  color: var(--dark);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.gs-eye-dark {
+  background: var(--dark);
+  color: var(--lime);
+}
+
+.gs-sk h2 {
+  max-width: 17ch;
+  margin: 30px auto 0;
+  color: #fff;
+  font-size: clamp(2.2rem, 5.4vw, 4.1rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.033em;
+}
+
+.gs-sk .gs-lead {
+  max-width: 58ch;
+  margin: 28px auto 0;
+  color: rgba(242, 241, 241, 0.66);
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  line-height: 1.7;
+}
+
+.gs-four {
+  display: grid;
+  gap: 96px 72px;
+  margin-top: 110px;
+  text-align: center;
+}
+
+@media (min-width: 840px) {
+  .gs-four {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.gs-four h3 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+}
+
+.gs-four p {
+  max-width: 36ch;
+  margin: 16px auto 0;
+  color: rgba(242, 241, 241, 0.62);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* The only place the chain speaks for itself, so it speaks in mono. */
+.gs-sees {
+  margin-top: 20px;
+  color: var(--mut);
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.07em;
+}
+
+.gs-sees b {
+  color: var(--lime);
+  font-weight: 600;
+}
+
+.gs-steps {
+  display: grid;
+  gap: 104px;
+  margin-top: 110px;
+}
+
+@media (min-width: 900px) {
+  .gs-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 60px;
+  }
+}
+
+.gs-step .gs-n {
+  color: var(--lime);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+}
+
+.gs-step h3 {
+  margin: 22px 0 0;
+  color: #fff;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+}
+
+.gs-step p {
+  max-width: 34ch;
+  margin: 16px auto 0;
+  color: rgba(242, 241, 241, 0.62);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.gs-line {
+  padding: 190px 0 0;
+}
+
+.gs-line h2 {
+  max-width: 15ch;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+}
+
+.gs-line .gs-lead {
+  max-width: 52ch;
+}
+
+/* The page's one inversion. Everything above is black holding a little lime;
+   the close is lime holding the black. */
+.gs-cta-panel {
+  margin-top: 168px;
+  padding: 88px 40px;
+  border-radius: 24px;
+  background: var(--lime);
+  color: var(--dark);
+}
+
+.gs-cta-panel h2 {
+  max-width: 14ch;
+  color: var(--dark);
+  font-weight: 400;
+}
+
+.gs-cta-panel p {
+  max-width: 50ch;
+  margin: 22px auto 0;
+  color: #3d3b1c;
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.gs-btn {
+  display: inline-block;
+  margin-top: 38px;
+  padding: 16px 36px;
+  border-radius: 999px;
+  background: var(--dark);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.gs-btn.gs-btn-alt {
+  margin-left: 12px;
+  background: transparent;
+  color: var(--dark);
+  box-shadow: inset 0 0 0 1px rgba(25, 22, 23, 0.32);
+}
+
+@media (max-width: 640px) {
+  .gs-wrap {
+    padding: 0 22px;
+  }
+
+  .gs-sec {
+    padding: 104px 0 0;
+  }
+
+  .gs-line {
+    padding: 120px 0 0;
+  }
+
+  .gs-four {
+    gap: 72px;
+    margin-top: 72px;
+  }
+
+  .gs-steps {
+    gap: 72px;
+    margin-top: 72px;
+  }
+
+  .gs-cta-panel {
+    margin-top: 104px;
+    padding: 60px 24px;
+  }
+
+  .gs-btn.gs-btn-alt {
+    margin: 14px 0 0;
+  }
+}
+
+/* --------------------------------------------------------------- footer -- */
+
+.gs-f {
+  width: 100vw;
+  margin-right: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--footer-bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  text-align: left;
+}
+
+.gs-f-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 72px 32px 40px;
+}
+
+.gs-f-top {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 44px;
+}
+
+.gs-f-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+}
+
+.gs-f-brand svg {
+  display: block;
+  border-radius: 8px;
+}
+
+.gs-f-tag {
+  max-width: 46ch;
+  margin: 0;
+  color: #8b8a8a;
+  font-size: 14px;
+}
+
+.gs-f-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 30px;
+  padding: 36px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.gs-f-h {
+  margin-bottom: 14px;
+  color: #6f6e6e;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.gs-f-l {
+  display: block;
+  padding: 5px 0;
+  color: var(--text);
+  font-size: 14.5px;
+  text-decoration: none;
+}
+
+.gs-f-l:hover {
+  color: var(--lime);
+}
+
+.gs-f-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  padding-top: 26px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  color: #6f6e6e;
+  font-size: 12.5px;
+}
+
+@media (max-width: 640px) {
+  .gs-f-wrap {
+    padding: 56px 22px 32px;
+  }
+
+  .gs-root {
+    padding: 8px 14px;
+  }
+
+  .gs-logo-mark {
+    height: 44px;
+  }
+
+  .gs-hero {
+    min-height: 100svh;
+  }
+
+  .gs-hero-content-wrap {
+    padding: 24px 20px 40px;
+  }
+
+  .gs-hero-content {
+    max-width: 100%;
+  }
+
+  .gs-h1 {
+    margin-bottom: 18px;
+    font-size: clamp(1.9rem, 8vw, 2.4rem);
+  }
+
+  .gs-sub {
+    margin-bottom: 24px;
+    padding: 0 4px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  .gs-sub br {
+    display: none;
+  }
+
+  .gs-cta,
+  .gs-cta-ghost {
+    padding: 12px 22px;
+    font-size: 0.85rem;
+  }
+}

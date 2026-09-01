@@ -31,6 +31,19 @@ export const links = {
   terms: "/terms",
 } as const;
 
+/**
+ * The facts on /privacy and /terms that only the operator can supply. Anything
+ * left unset renders as a visible placeholder rather than as invented text —
+ * see `Value` in components/Doc.tsx. Nothing here should be guessed.
+ */
+export const legal = {
+  entity: process.env.NEXT_PUBLIC_GATESTOCK_ENTITY ?? null,
+  jurisdiction: process.env.NEXT_PUBLIC_GATESTOCK_JURISDICTION ?? null,
+  contact: process.env.NEXT_PUBLIC_GATESTOCK_CONTACT ?? null,
+  host: process.env.NEXT_PUBLIC_GATESTOCK_HOST ?? null,
+  updated: process.env.NEXT_PUBLIC_GATESTOCK_LEGAL_UPDATED ?? null,
+} as const;
+
 export const nav = [
   { href: "/#ownership", label: "Ownership" },
   { href: "/#how-it-works", label: "How it works" },
